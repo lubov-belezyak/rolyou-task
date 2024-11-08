@@ -23,16 +23,26 @@ class User
     public function validate($data, $id = null)
     {
         $errors = [];
-        if (empty($data['full_name']) || strlen($data['full_name']) > 255) {
-            $errors['full_name'] = 'Full name is required and max length is 255';
-        }
-
-        if (empty($data['role']) || strlen($data['role']) > 255) {
-            $errors['role'] = 'Role is required and max length is 255';
-        }
-
-        if (!isset($data['efficiency']) || !is_int($data['efficiency']) || $data['efficiency'] < 0 || $data['efficiency'] > 100) {
-            $errors['efficiency'] = 'Efficiency must be an integer between 0 and 100';
+        if (!$id) { //create validation
+            if (empty($data['full_name']) || strlen($data['full_name']) > 255) {
+                $errors['full_name'] = 'Full name is required and max length is 255';
+            }
+            if (empty($data['role']) || strlen($data['role']) > 255) {
+                $errors['role'] = 'Role is required and max length is 255';
+            }
+            if (!isset($data['efficiency']) || !is_int($data['efficiency']) || $data['efficiency'] < 0 || $data['efficiency'] > 100) {
+                $errors['efficiency'] = 'Efficiency must be an integer between 0 and 100';
+            }
+        } else { //update validation
+            if (isset($data['full_name']) && (empty($data['full_name']) || strlen($data['full_name']) > 255)) {
+                $errors['full_name'] = 'Full name is required and max length is 255';
+            }
+            if (isset($data['role']) && (empty($data['role']) || strlen($data['role']) > 255)) {
+                $errors['role'] = 'Role is required and max length is 255';
+            }
+            if (isset($data['efficiency']) && (!is_int($data['efficiency']) || $data['efficiency'] < 0 || $data['efficiency'] > 100)) {
+                $errors['efficiency'] = 'Efficiency must be an integer between 0 and 100';
+            }
         }
         return $errors;
     }
@@ -72,7 +82,10 @@ class User
         $stmt->bindParam(':full_name', $data['full_name']);
         $stmt->bindParam(':role', $data['role']);
         $stmt->bindParam(':efficiency', $data['efficiency'], \PDO::PARAM_INT);
-        return $stmt->execute();
+        if ($stmt->execute()) {
+            return $this->findById($id);
+        }
+        return false;
     }
 
     public function delete($id)

@@ -63,11 +63,42 @@ class UserController
         ]);
     }
 
-    public function update($data, $id){
+    public function update($data, $id)
+    {
         $existingUser = $this->userModel->findById($id);
+        if (!$existingUser) {
+            echo json_encode([
+                'success' => false,
+                'error' => 'User not found'
+            ]);
+            return;
+        }
+
         $errors = $this->userModel->validate($data, $id);
-        $result = $this->userModel->update($id, $data);
+        if (!empty($errors)) {
+            echo json_encode([
+                'success' => false,
+                'errors' => $errors
+            ]);
+            return;
+        }
+
+        $updatedData = array_merge($existingUser, $data);
+        $result = $this->userModel->update($id, $updatedData);
+
+        if ($result) {
+            echo json_encode([
+                'success' => true,
+                'result' => $result
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'error' => 'Failed to update user'
+            ]);
+        }
     }
+
 
     public function delete($id){
         $existingUser = $this->userModel->findById($id);
