@@ -15,7 +15,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
     depends_on:
       - db
-    command: /bin/bash -c "composer install --no-interaction --prefer-dist && php /var/www/html/vendor/bin/phinx migrate && apache2-foreground"
+    command: /bin/bash -c "docker-entrypoint.sh mysqld & sleep 15 && composer install --no-interaction --prefer-dist && php /var/www/html/vendor/bin/phinx migrate && apache2-foreground"
 
   db:
     image: mysql:5.7

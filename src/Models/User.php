@@ -23,14 +23,16 @@ class User
     public function validate($data, $id = null)
     {
         $errors = [];
-        if (empty($data['full_name'])) {
-            $errors['full_name'] = 'Full name is required';
+        if (empty($data['full_name']) || strlen($data['full_name']) > 255) {
+            $errors['full_name'] = 'Full name is required and max length is 255';
         }
-        if (empty($data['role'])) {
-            $errors['role'] = 'Role is required';
+
+        if (empty($data['role']) || strlen($data['role']) > 255) {
+            $errors['role'] = 'Role is required and max length is 255';
         }
-        if (!isset($data['efficiency']) || !is_int($data['efficiency'])) {
-            $errors['efficiency'] = 'Efficiency must be an integer';
+
+        if (!isset($data['efficiency']) || !is_int($data['efficiency']) || $data['efficiency'] < 0 || $data['efficiency'] > 100) {
+            $errors['efficiency'] = 'Efficiency must be an integer between 0 and 100';
         }
         return $errors;
     }
@@ -56,7 +58,10 @@ class User
         $stmt->bindParam(':full_name', $data['full_name']);
         $stmt->bindParam(':role', $data['role']);
         $stmt->bindParam(':efficiency', $data['efficiency'], \PDO::PARAM_INT);
-        return $stmt->execute();
+        if ($stmt->execute()) {
+            return ['id' => $this->db->lastInsertId()];
+        }
+        return false;
     }
 
     public function update($id, $data)
