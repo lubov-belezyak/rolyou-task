@@ -1,0 +1,14 @@
+{
+    "name": "rolyou-task/rolyou-task",
+    "description": "test project on PHP5.6",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Src\\": "src/"
+        }
+    },
+    "require": {
+        "vlucas/phpdotenv": "^4.3",
+        "robmorgan/phinx": "^0.11.7"
+    }
+}
