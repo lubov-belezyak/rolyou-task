@@ -8,7 +8,8 @@ class Router
         'GET' => [],
         'POST' => [],
         'PUT' => [],
-        'DELETE' => []
+        'PATCH' => [],
+        'DELETE' => [],
     ];
 
     public function get($route, $action) {
@@ -21,6 +22,10 @@ class Router
 
     public function put($route, $action) {
         $this->routes['PUT'][$route] = $action;
+    }
+
+    public function patch($route, $action) {
+        $this->routes['PATCH'][$route] = $action;
     }
 
     public function delete($route, $action) {
@@ -57,7 +62,7 @@ class Router
 
         $controller = new $controllerName();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT' || $_SERVER['REQUEST_METHOD'] === 'PATCH') {
             $data = json_decode(file_get_contents('php://input'), true);
             if (!$data) {
                 http_response_code(400);

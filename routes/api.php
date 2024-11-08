@@ -7,7 +7,7 @@ $router = new Router();
 $router->get('/get', 'UserController@index');
 $router->post('/create', 'UserController@store');
 $router->get('/get/{id}', 'UserController@show');
-$router->put('/update/{id}', 'UserController@update');
+$router->patch('/update/{id}', 'UserController@update');
 $router->delete('/delete/{id}', 'UserController@delete');
 $router->delete('/delete', 'UserController@deleteAll');
 
