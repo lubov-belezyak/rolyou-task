@@ -2,6 +2,7 @@
 
 namespace Src\Models;
 
+use PDO;
 use Src\Services\Database;
 
 class User
@@ -47,9 +48,23 @@ class User
         return $errors;
     }
 
-    public function getAll()
+    public function getAll($filters = [])
     {
-        $stmt = $this->db->query("SELECT id, full_name, role, efficiency FROM " . $this->table);
+        $query = "SELECT * FROM " . $this->table;
+
+        if (!empty($filters)) {
+            $query .= " WHERE 1";  // Для удобства добавляем всегда "WHERE 1"
+            foreach ($filters as $key => $value) {
+                $query .= " AND {$key} = :{$key}";
+            }
+        }
+        $stmt = $this->db->prepare($query);
+
+        foreach ($filters as $key => $value) {
+            $stmt->bindParam(":{$key}", $value);
+        }
+
+        $stmt->execute();
         return $stmt->fetchAll();
     }
 

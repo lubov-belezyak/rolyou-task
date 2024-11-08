@@ -14,7 +14,15 @@ class UserController
     }
 
     public function index(){
-        $users = $this->userModel->getAll();
+        $filters = [];
+        if (isset($_GET['role'])) {
+            $filters['role'] = $_GET['role'];
+        }
+        if (isset($_GET['efficiency'])) {
+            $filters['efficiency'] = $_GET['efficiency'];
+        }
+
+        $users = $this->userModel->getAll($filters);
         echo json_encode([
             'success' => true,
             'result' => $users,
