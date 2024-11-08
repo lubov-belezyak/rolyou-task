@@ -81,7 +81,7 @@ class UserController
         echo json_encode([
             'success' => true,
             'result' => [
-                'id' => $result['id']
+                'id' => (int) $result['id']
             ]
         ]);
     }
