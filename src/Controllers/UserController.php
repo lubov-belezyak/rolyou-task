@@ -29,7 +29,9 @@ class UserController
             http_response_code(200);
             echo json_encode([
                 'success' => true,
-                'result' => $users,
+                'result' => [
+                    'users' => $users,
+                ],
             ]);
         } else {
             http_response_code(404);
