@@ -9,6 +9,7 @@ $router->post('/create', 'UserController@store');
 $router->get('/get/{id}', 'UserController@show');
 $router->put('/update/{id}', 'UserController@update');
 $router->delete('/delete/{id}', 'UserController@delete');
+$router->delete('/delete', 'UserController@deleteAll');
 
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

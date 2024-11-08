@@ -100,8 +100,48 @@ class UserController
     }
 
 
-    public function delete($id){
-        $existingUser = $this->userModel->findById($id);
-        $result = $this->userModel->delete($id);
+    public function delete($id)
+    {
+
+            $existingUser = $this->userModel->findById($id);
+            if (!$existingUser) {
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'User not found'
+                ]);
+                return;
+            }
+
+            $result = $this->userModel->delete($id);
+
+            if ($result) {
+                echo json_encode([
+                    'success' => true,
+                    'result' => $existingUser
+                ]);
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'Failed to delete user'
+                ]);
+            }
+
+
     }
+
+    public function deleteAll()
+    {
+        $result = $this->userModel->deleteAll();
+        if ($result) {
+            echo json_encode([
+                'success' => true
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'error' => 'Failed to delete all users'
+            ]);
+        }
+    }
+
 }

@@ -94,4 +94,10 @@ class User
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+    public function deleteAll()
+    {
+        $stmt = $this->db->prepare("DELETE FROM " . $this->table);
+        return $stmt->execute();
+    }
 }
