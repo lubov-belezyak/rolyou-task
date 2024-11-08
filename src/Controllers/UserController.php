@@ -14,6 +14,10 @@ class UserController
 
     public function index(){
         $users = $this->userModel->getAll();
+        echo json_encode([
+            'success' => true,
+            'result' => $users,
+        ]);
     }
 
     public function show($id){

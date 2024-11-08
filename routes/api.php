@@ -1,6 +1,5 @@
 <?php
 
-use Src\Controllers\UserController;
 use Src\Services\Router;
 
 $router = new Router();
