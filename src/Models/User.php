@@ -50,7 +50,7 @@ class User
 
     public function getAll($filters = [])
     {
-        $query = "SELECT * FROM " . $this->table;
+        $query = "SELECT id, full_name, role, efficiency FROM " . $this->table;
 
         if (!empty($filters)) {
             $query .= " WHERE 1";
