@@ -53,7 +53,11 @@ class UserController
         http_response_code(200);
         echo json_encode([
             'success' => true,
-            'result' => $user,
+            'result' => [
+                'users' => [
+                    $user
+                ]
+            ]
         ]);
     }
 
