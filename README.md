@@ -11,9 +11,14 @@
 docker compose up --build
 ```
 
-
+Миграции: 
+```bash
 vendor/bin/phinx migrate
+```
+
+```bash
 vendor/bin/phinx rollback
+```
 
 ## Инструменты и версии
 - PHP: 5.6 (т.к. основной проект на PHP этой версии)
