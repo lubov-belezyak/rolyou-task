@@ -7,13 +7,15 @@ use Src\Models\User;
 class UserController
 {
     protected $userModel;
+
     public function __construct()
     {
         $this->userModel = new User();
         header('Content-Type: application/json');
     }
 
-    public function index(){
+    public function index()
+    {
         $filters = [];
         if (isset($_GET['role'])) {
             $filters['role'] = $_GET['role'];
@@ -23,26 +25,38 @@ class UserController
         }
 
         $users = $this->userModel->getAll($filters);
-        echo json_encode([
-            'success' => true,
-            'result' => $users,
-        ]);
+        if ($users) {
+            http_response_code(200);
+            echo json_encode([
+                'success' => true,
+                'result' => $users,
+            ]);
+        } else {
+            http_response_code(404);
+            echo json_encode([
+                'success' => false,
+                'error' => 'No users found'
+            ]);
+        }
     }
 
-    public function show($id){
+    public function show($id)
+    {
         $user = $this->userModel->findById($id);
         if (!$user) {
             http_response_code(404);
             echo json_encode(['error' => 'User not found']);
             return;
         }
+        http_response_code(200);
         echo json_encode([
             'success' => true,
             'result' => $user,
         ]);
     }
 
-    public function store($data){
+    public function store($data)
+    {
         $errors = $this->userModel->validate($data);
         if (!empty($errors)) {
             http_response_code(400);
@@ -63,6 +77,7 @@ class UserController
             return;
         }
 
+        http_response_code(201);
         echo json_encode([
             'success' => true,
             'result' => [
@@ -75,6 +90,7 @@ class UserController
     {
         $existingUser = $this->userModel->findById($id);
         if (!$existingUser) {
+            http_response_code(404);
             echo json_encode([
                 'success' => false,
                 'error' => 'User not found'
@@ -84,6 +100,7 @@ class UserController
 
         $errors = $this->userModel->validate($data, $id);
         if (!empty($errors)) {
+            http_response_code(400);
             echo json_encode([
                 'success' => false,
                 'errors' => $errors
@@ -95,11 +112,13 @@ class UserController
         $result = $this->userModel->update($id, $updatedData);
 
         if ($result) {
+            http_response_code(200);
             echo json_encode([
                 'success' => true,
                 'result' => $result
             ]);
         } else {
+            http_response_code(500);
             echo json_encode([
                 'success' => false,
                 'error' => 'Failed to update user'
@@ -110,29 +129,31 @@ class UserController
 
     public function delete($id)
     {
+        $existingUser = $this->userModel->findById($id);
+        if (!$existingUser) {
+            http_response_code(404);
+            echo json_encode([
+                'success' => false,
+                'error' => 'User not found'
+            ]);
+            return;
+        }
 
-            $existingUser = $this->userModel->findById($id);
-            if (!$existingUser) {
-                echo json_encode([
-                    'success' => false,
-                    'error' => 'User not found'
-                ]);
-                return;
-            }
+        $result = $this->userModel->delete($id);
 
-            $result = $this->userModel->delete($id);
-
-            if ($result) {
-                echo json_encode([
-                    'success' => true,
-                    'result' => $existingUser
-                ]);
-            } else {
-                echo json_encode([
-                    'success' => false,
-                    'error' => 'Failed to delete user'
-                ]);
-            }
+        if ($result) {
+            http_response_code(200);
+            echo json_encode([
+                'success' => true,
+                'result' => $existingUser
+            ]);
+        } else {
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'error' => 'Failed to delete user'
+            ]);
+        }
 
 
     }
@@ -141,10 +162,12 @@ class UserController
     {
         $result = $this->userModel->deleteAll();
         if ($result) {
+            http_response_code(200);
             echo json_encode([
                 'success' => true
             ]);
         } else {
+            http_response_code(500);
             echo json_encode([
                 'success' => false,
                 'error' => 'Failed to delete all users'

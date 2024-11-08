@@ -53,7 +53,7 @@ class User
         $query = "SELECT * FROM " . $this->table;
 
         if (!empty($filters)) {
-            $query .= " WHERE 1";  // Для удобства добавляем всегда "WHERE 1"
+            $query .= " WHERE 1";
             foreach ($filters as $key => $value) {
                 $query .= " AND {$key} = :{$key}";
             }
